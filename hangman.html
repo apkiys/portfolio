@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!-- Declares that this is an HTML5 document -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Sets character encoding to UTF-8 to support all characters -->
+
+  <title>Hangman Game</title>
+  <!-- Title that appears on the browser tab -->
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Links to external stylesheet for shared styles across the website -->
+
+  <!-- Inline CSS specific to this game page -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    .hangman-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    #wordDisplay {
+      font-size: 2rem;
+      letter-spacing: 10px;
+      margin-bottom: 20px;
+    }
+
+    #letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .letter-btn {
+      padding: 10px 15px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .letter-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===== MAIN GAME CONTAINER ===== -->
+<div class="hangman-container">
+  <h1>Hangman Game</h1>
+  <!-- Game title -->
+
+  <div id="wordDisplay">_ _ _ _</div>
+  <!-- The word to guess is shown here, with underscores for hidden letters -->
+
+  <div id="letters"></div>
+  <!-- Alphabet buttons will be dynamically added here -->
+
+  <p id="message"></p>
+  <!-- Game status message: win or lose -->
+</div>
+
+<!-- ===== GAME SCRIPT ===== -->
+<script>
+  // List of possible words — I can change or add more here easily
+  const words = [
+    "javascript", "hangman", "portfolio", "developer", "frontend",
+    "coding", "interactive", "project", "application", "interface"
+  ];
+
+  // Randomly pick a word from the list
+  const chosenWord = words[Math.floor(Math.random() * words.length)];
+
+  // Arrays to track guessed letters and wrong attempts
+  let guessed = [];
+  let wrongGuesses = 0;
+  const maxWrong = 6; // Max number of wrong guesses before losing
+
+  // Getting references to HTML elements
+  const wordDisplay = document.getElementById("wordDisplay");
+  const lettersDiv = document.getElementById("letters");
+  const message = document.getElementById("message");
+
+  // Updates the word display with guessed letters or underscores
+  function updateWordDisplay() {
+    wordDisplay.textContent = chosenWord.split('').map(letter => (
+      guessed.includes(letter) ? letter : "_"
+    )).join(" ");
+  }
+
+  // Handles the logic when a letter button is clicked
+  function handleGuess(letter) {
+    if (!guessed.includes(letter)) {
+      guessed.push(letter); // Save the guessed letter
+      document.getElementById(letter).disabled = true; // Disable that button
+
+      if (!chosenWord.includes(letter)) {
+        wrongGuesses++; // Increase count if it's a wrong guess
+      }
+
+      updateWordDisplay(); // Refresh the displayed word
+      checkGameStatus(); // See if the player won or lost
+    }
+  }
+
+  // Checks if the game has been won or lost
+  function checkGameStatus() {
+    if (wrongGuesses >= maxWrong) {
+      message.textContent = `Game Over! The word was "${chosenWord}"`;
+      disableAllButtons(); // Stop further guessing
+    } else if (chosenWord.split('').every(letter => guessed.includes(letter))) {
+      message.textContent = "Congratulations! You guessed the word!";
+      disableAllButtons();
+    }
+  }
+
+  // Disables all letter buttons when game ends
+  function disableAllButtons() {
+    document.querySelectorAll(".letter-btn").forEach(btn => btn.disabled = true);
+  }
+
+  // Dynamically creates the A–Z alphabet buttons
+  "abcdefghijklmnopqrstuvwxyz".split('').forEach(letter => {
+    const button = document.createElement("button");
+    button.textContent = letter;
+    button.className = "letter-btn";
+    button.id = letter;
+    button.onclick = () => handleGuess(letter);
+    lettersDiv.appendChild(button);
+  });
+
+  // Initialize the display when page loads
+  updateWordDisplay();
+</script>
+
+</body>
+</html>

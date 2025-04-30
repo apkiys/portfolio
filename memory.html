@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!-- Declares this as an HTML5 document -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes sure all characters are correctly interpreted (UTF-8 is the standard) -->
+
+  <title>Memory Flashcard Game</title>
+  <!-- Appears on the browser tab -->
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Links to my external CSS (shared styles across the site) -->
+
+  <!-- Inline CSS specific to this game -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding-top: 80px;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .card {
+      width: 100px;
+      height: 100px;
+      perspective: 600px; /* gives a 3D flip effect */
+      cursor: pointer;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+      /* Rotates the card to show the back side */
+    }
+
+    .card-front,
+    .card-back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border-radius: 8px;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .card-front {
+      background-color: #007BFF;
+      color: white;
+    }
+
+    .card-back {
+      background-color: #fff;
+      border: 2px solid #007BFF;
+      transform: rotateY(180deg);
+      /* The back side is flipped to be hidden initially */
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===== GAME TITLE ===== -->
+<h1>Memory Flashcard Game</h1>
+
+<!-- ===== MAIN GAME BOARD CONTAINER ===== -->
+<div class="game-board" id="gameBoard"></div>
+<!-- This is where all the cards will be generated dynamically -->
+
+<!-- ===== JAVASCRIPT GAME LOGIC ===== -->
+<script>
+  const symbols = ["🍎", "🍌", "🍓", "🍇", "🍍", "🥝", "🍉", "🍒"];
+  const cards = [...symbols, ...symbols]; // Duplicates each symbol to make pairs
+  let flippedCards = [];  // Stores the currently flipped cards
+  let matchedCards = [];  // Stores the cards that are already matched
+
+  // === Randomizes the order of the cards ===
+  function shuffle(array) {
+    return array.sort(() => 0.5 - Math.random());
+  }
+  const shuffledCards = shuffle(cards);
+  const gameBoard = document.getElementById("gameBoard");
+
+  // === Creates card elements and appends them to the board ===
+  shuffledCards.forEach((symbol, index) => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.dataset.symbol = symbol; // stores the symbol for comparison
+
+    // Each card has a front and back
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="card-front"></div>
+        <div class="card-back">${symbol}</div>
+      </div>
+    `;
+
+    // When clicked, the card will attempt to flip
+    card.addEventListener("click", () => flipCard(card));
+    gameBoard.appendChild(card);
+  });
+
+  // === Handles the flip logic ===
+  function flipCard(card) {
+    // Prevent flipping more than 2 cards or re-clicking matched cards
+    if (
+      flippedCards.length === 2 ||
+      card.classList.contains("flipped") ||
+      matchedCards.includes(card)
+    ) {
+      return;
+    }
+
+    // Flip the selected card
+    card.classList.add("flipped");
+    flippedCards.push(card);
+
+    // If 2 cards are flipped, check if they match
+    if (flippedCards.length === 2) {
+      const [first, second] = flippedCards;
+
+      if (first.dataset.symbol === second.dataset.symbol) {
+        // It's a match!
+        matchedCards.push(first, second);
+        flippedCards = [];
+
+        // Game complete check
+        if (matchedCards.length === cards.length) {
+          setTimeout(() => alert("🎉 You matched all cards!"), 300);
+        }
+      } else {
+        // Not a match: unflip after short delay
+        setTimeout(() => {
+          first.classList.remove("flipped");
+          second.classList.remove("flipped");
+          flippedCards = [];
+        }, 1000);
+      }
+    }
+  }
+</script>
+
+</body>
+</html>

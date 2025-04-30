@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!-- Declares this is an HTML5 document -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Makes sure all characters are interpreted correctly -->
+
+  <title>Contact Me</title>
+  <!-- The tab title of the browser window -->
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Links to the external CSS file for shared styles -->
+
+  <!-- EmailJS script for sending email without a backend -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <!-- Inline styling specifically for this page (just to keep it quick and simple here) -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding-top: 120px;
+      text-align: center;
+    }
+
+    .contact-form {
+      max-width: 500px;
+      margin: auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===== CONTACT FORM HEADING ===== -->
+<h1>Contact Me</h1>
+<!-- A welcoming title at the top of the contact section -->
+
+<!-- ===== CONTACT FORM SECTION ===== -->
+<form id="contactForm" class="contact-form">
+  <!-- The form that collects user input and sends it to EmailJS -->
+
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" name="firstName" id="firstName" required />
+    <!-- Required field for user's first name -->
+  </div>
+
+  <div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" name="lastName" id="lastName" required />
+    <!-- Required field for user's last name -->
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required />
+    <!-- Valid email input for contact reply -->
+  </div>
+
+  <div class="form-group">
+    <label for="contactNo">Contact No.</label>
+    <input type="text" name="contactNo" id="contactNo" required />
+    <!-- Optional: could add pattern to validate phone numbers -->
+  </div>
+
+  <div class="form-group">
+    <label for="message">Message</label>
+    <textarea name="message" id="message" placeholder="Write your remarks here..." required></textarea>
+    <!-- Main message box for user input -->
+  </div>
+
+  <button type="submit">Send</button>
+  <!-- Submit button to trigger EmailJS email send -->
+</form>
+
+<!-- ===== JAVASCRIPT TO HANDLE EMAIL SENDING ===== -->
+<script>
+  // Initialize EmailJS with public key (to be replaced with actual key)
+  emailjs.init("$EMAILJS"); // <-- Contains EmailJS public key here
+
+  // Listen for form submission
+  document.getElementById("contactForm").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent default browser form submit
+
+    // Use EmailJS to send form data to configured service/template
+    emailjs.sendForm("$SERVICEID", "$TEMPLATEID", this) // <-- Replace with actual Service ID and Template ID
+      .then(function () {
+        alert("✅ Message sent successfully!");
+        document.getElementById("contactForm").reset(); // Clear the form after sending
+      }, function (error) {
+        alert("❌ Failed to send message. Please try again.");
+        console.error(error); // Log the error for debugging
+      });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<!-- Declares this as an HTML5 document -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Sets the character encoding to UTF-8 to support all characters -->
+
+    <title>Portfolio</title>
+    <!-- The title shown on the browser tab -->
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- Links to my external stylesheet where all the custom styling is handled -->
+</head>
+
+<body>
+
+<!-- ===== NAVIGATION BAR ===== -->
+<nav>
+    <div class="nav-container">
+        <!-- Website logo or name, placed on the left -->
+        <div class="logo">
+            <h2>Chris Pang</h2>
+        </div>
+
+        <!-- Navigation menu with links to different sections of the site -->
+        <div class="nav-links">
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="about.html" class="nav-btn">About</a>
+            <a href="portfolio.html" class="nav-btn">Portfolio</a>
+            <a href="contact.html" class="nav-btn">Contact</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== MAIN CONTENT AREA ===== -->
+<main class="portfolio-main">
+    <h1 class="portfolio-title">My Projects</h1>
+    <!-- Big heading for the section to introduce my project showcase -->
+
+    <div class="portfolio-grid">
+        <!-- Projects are laid out in a responsive grid format -->
+
+        <!-- === Project 1: Hangman Game === -->
+        <div class="project-card">
+            <a href="hangman.html" target="_blank">
+                <!-- Clicking this will open the hangman game in a new tab -->
+                <img src="assets/images/hangman.jpg" alt="Hangman Game">
+                <h2>Hangman Game</h2>
+            </a>
+            <p>A fun word-guessing game where you try to guess the hidden word before running out of attempts.</p>
+            <!-- A quick description of the game and what it does -->
+        </div>
+
+        <!-- === Project 2: Typing Game === -->
+        <div class="project-card">
+            <a href="typing.html" target="_blank">
+                <!-- Clicking this will open the typing game in a new tab -->
+                <img src="assets/images/typing.jpg" alt="Typing Game">
+                <h2>Typing Game</h2>
+            </a>
+            <p>Challenge your speed and accuracy by typing as many correct words as possible before time runs out.</p>
+            <!-- A quick description of the game and what it does -->
+        </div>
+
+        <!-- === Project 3: Memory Flashcard Game === -->
+        <div class="project-card">
+            <a href="memory.html" target="_blank">
+                <!-- Clicking this will open the memory game in a new tab -->
+                <img src="assets/images/memory.jpg" alt="Memory Flashcard">
+                <h2>Memory Flashcard</h2>
+            </a>
+            <p>Test and improve your memory by matching the flashcards as quickly as possible.</p>
+            <!-- A quick description of the game and what it does -->
+        </div>
+    </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <!-- Footer with copyright -->
+    <p>&copy; 2025 Chris Pang. All rights reserved.</p>
+</footer>
+
+<!-- Linking for external JavaScript file (for future development) -->
+<script src="assets/js/script.js"></script>
+
+</body>
+</html>

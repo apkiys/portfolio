@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!-- Declares this is an HTML5 document -->
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Sets encoding to support all characters (standard UTF-8) -->
+
+  <title>Typing Speed Game</title>
+  <!-- Appears as the page title on the browser tab -->
+
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <!-- Links to the shared stylesheet (used across the site) -->
+
+  <!-- Inline styling specific to the typing game -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding-top: 100px;
+      text-align: center;
+    }
+
+    .typing-container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .text-display {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      line-height: 2;
+    }
+
+    #inputField {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .stats {
+      margin-top: 20px;
+      font-size: 1.1rem;
+    }
+
+    .start-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .start-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===== Typing Game Container ===== -->
+<div class="typing-container">
+  <h1>Typing Speed Game</h1>
+  <!-- Main title for the page -->
+
+  <div class="text-display" id="textDisplay">Click "Start" to begin.</div>
+  <!-- This will show the text the user has to type -->
+
+  <input type="text" id="inputField" placeholder="Start typing here..." disabled />
+  <!-- Input field for the user to type into. Disabled until game starts -->
+
+  <!-- Real-time stats section -->
+  <div class="stats">
+    <p><strong>Time Left:</strong> <span id="timeLeft">10</span> seconds</p>
+    <p><strong>WPM:</strong> <span id="wpm">0</span> | <strong>CPM:</strong> <span id="cpm">0</span> | <strong>Accuracy:</strong> <span id="accuracy">100</span>%</p>
+  </div>
+
+  <!-- Start button to trigger the game -->
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- ===== Typing Game Logic Script ===== -->
+<script>
+  // Sample text options the player can be asked to type
+  const wordSamples = [
+    "web development is fun and rewarding",
+    "javascript is a versatile programming language",
+    "practice makes perfect in coding",
+    "frontend and backend development work together",
+    "typing speed can be improved with games"
+  ];
+
+  // Grab all the necessary DOM elements
+  const textDisplay = document.getElementById("textDisplay");
+  const inputField = document.getElementById("inputField");
+  const timeLeftSpan = document.getElementById("timeLeft");
+  const wpmSpan = document.getElementById("wpm");
+  const cpmSpan = document.getElementById("cpm");
+  const accuracySpan = document.getElementById("accuracy");
+
+  // Game state variables
+  let timer;
+  const GAME_TIME = 10; // total game time in seconds
+  let timeLeft = GAME_TIME;
+  let correctChars = 0;
+  let totalChars = 0;
+  let wordCount = 0;
+  let currentText = "";
+
+  // Starts the typing game
+  function startGame() {
+    resetGame();
+    currentText = wordSamples[Math.floor(Math.random() * wordSamples.length)];
+    textDisplay.textContent = currentText;
+    inputField.disabled = false;
+    inputField.focus();
+
+    // Countdown timer
+    timer = setInterval(() => {
+      timeLeft--;
+      timeLeftSpan.textContent = timeLeft;
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        inputField.disabled = true;
+      }
+    }, 1000);
+  }
+
+  // Resets the game state and stats
+  function resetGame() {
+    timeLeft = GAME_TIME;
+    correctChars = 0;
+    totalChars = 0;
+    wordCount = 0;
+    timeLeftSpan.textContent = timeLeft;
+    wpmSpan.textContent = 0;
+    cpmSpan.textContent = 0;
+    accuracySpan.textContent = 100;
+    inputField.value = "";
+    inputField.disabled = true;
+    clearInterval(timer);
+  }
+
+  // Tracks user input in real time
+  inputField.addEventListener("input", () => {
+    const inputText = inputField.value;
+    totalChars++; // Every keystroke counts
+
+    // Count number of correct characters typed
+    correctChars = 0;
+    for (let i = 0; i < inputText.length; i++) {
+      if (inputText[i] === currentText[i]) {
+        correctChars++;
+      }
+    }
+
+    // Count correct words by comparing input and target word arrays
+    const inputWords = inputText.trim().split(/\s+/);
+    const targetWords = currentText.trim().split(/\s+/);
+    wordCount = 0;
+    for (let i = 0; i < inputWords.length; i++) {
+      if (inputWords[i] === targetWords[i]) {
+        wordCount++;
+      }
+    }
+
+    // Calculate time-based metrics
+    const secondsElapsed = GAME_TIME - timeLeft + 1;
+    const wpm = Math.round((wordCount / secondsElapsed) * 60); // words per minute
+    const cpm = Math.round((correctChars / secondsElapsed) * 60); // characters per minute
+    const accuracy = totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
+
+    // Update live stats
+    wpmSpan.textContent = isNaN(wpm) ? 0 : wpm;
+    cpmSpan.textContent = cpm;
+    accuracySpan.textContent = accuracy;
+  });
+</script>
+
+</body>
+</html>
