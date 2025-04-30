@@ -139,14 +139,14 @@
 <!-- ===== JAVASCRIPT TO HANDLE EMAIL SENDING ===== -->
 <script>
   // Initialize EmailJS with public key (to be replaced with actual key)
-  emailjs.init("$EMAILJS"); // <-- Contains EmailJS public key here
+  emailjs.init("Vhz5B3s5G8rOcLLET"); // <-- Contains EmailJS public key here
 
   // Listen for form submission
   document.getElementById("contactForm").addEventListener("submit", function (e) {
     e.preventDefault(); // Prevent default browser form submit
 
     // Use EmailJS to send form data to configured service/template
-    emailjs.sendForm("$SERVICEID", "$TEMPLATEID", this) // <-- Replace with actual Service ID and Template ID
+    emailjs.sendForm("service_793e6wk", "template_jt3rabm", this) // <-- Replace with actual Service ID and Template ID
       .then(function () {
         alert("✅ Message sent successfully!");
         document.getElementById("contactForm").reset(); // Clear the form after sending
